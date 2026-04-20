@@ -1,20 +1,335 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="fa" dir="rtl">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <title>Spoon-Knife</title>
-  <LINK href="styles.css" rel="stylesheet" type="text/css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#3480d4"/>
+  <meta name="description" content="برنامه چالش ۴۰ روزه برای پیگیری عادت‌ها"/>
+  <link rel="manifest" href="manifest.webmanifest"/>
+  <title>چالش ۴۰ روزه</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+    :root{
+      --bg0:#fff;--bg1:#f3f3f0;--bg2:#e8e8e4;
+      --t1:#1a1a18;--t2:#68685f;
+      --bl:rgba(0,0,0,.10);--bm:rgba(0,0,0,.18);
+      --green:#1a9e72;--gd:#0e6e52;
+      --red:#e04848;--rd:#a32d2d;
+      --blue:#3480d4;--bd:#1a5fa5;
+      --rmd:8px;--rlg:14px;
+    }
+    @media(prefers-color-scheme:dark){:root{
+      --bg0:#1c1c1a;--bg1:#252522;--bg2:#2e2e2a;
+      --t1:#f0f0ea;--t2:#909087;
+      --bl:rgba(255,255,255,.09);--bm:rgba(255,255,255,.16);
+    }}
+    body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg1);color:var(--t1);direction:rtl;min-height:100vh;padding-bottom:50px;}
+    .wrap{max-width:520px;margin:0 auto;padding:0 14px;}
+    .hdr{text-align:center;padding:22px 0 14px;}
+    .hdr h1{font-size:23px;font-weight:600;letter-spacing:-.4px;}
+    .hdr small{font-size:12px;color:var(--t2);}
+    .card{background:var(--bg0);border:0.5px solid var(--bl);border-radius:var(--rlg);padding:15px;margin-bottom:11px;}
+    .mrow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+    .met{background:var(--bg1);border-radius:var(--rmd);padding:11px 6px;text-align:center;}
+    .mlb{font-size:10px;color:var(--t2);margin-bottom:2px;}
+    .mvl{font-size:23px;font-weight:600;}
+    .gb{color:var(--green)}.rb{color:var(--red)}.bb{color:var(--blue)}
+    .pbar{background:var(--bg1);border-radius:99px;height:6px;margin:12px 0 4px;overflow:hidden;}
+    .pfil{height:100%;border-radius:99px;background:var(--green);transition:width .35s;}
+    .plbl{font-size:11px;color:var(--t2);direction:ltr;text-align:left;}
+    .tabs{display:flex;gap:6px;margin-bottom:10px;}
+    .tab{flex:1;padding:9px 4px;border-radius:99px;border:0.5px solid var(--bl);font-size:13px;cursor:pointer;background:transparent;color:var(--t2);font-family:inherit;}
+    .tab.on{background:var(--bg0);color:var(--t1);border-color:var(--bm);}
+    .stl{font-size:14px;font-weight:500;margin-bottom:8px;}
+    .ti{background:var(--bg0);border:0.5px solid var(--bl);border-radius:var(--rmd);padding:14px 12px;margin-bottom:8px;display:flex;align-items:center;gap:11px;cursor:pointer;user-select:none;min-height:50px;}
+    .ti.done{background:var(--bg1);}
+    .ti.lk{cursor:default;}
+    .chk{width:23px;height:23px;border-radius:50%;border:2px solid var(--bm);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .chk.on{background:var(--green);border-color:var(--green);}
+    .chk.on::after{content:'✓';color:#fff;font-size:12px;font-weight:700;}
+    .tn{flex:1;font-size:15px;line-height:1.35;}
+    .ti.done .tn{color:var(--t2);text-decoration:line-through;}
+    .btn{padding:9px 15px;border-radius:var(--rmd);border:0.5px solid var(--bm);background:transparent;color:var(--t1);font-size:14px;cursor:pointer;font-family:inherit;}
+    .btng{background:var(--green);color:#fff;border-color:var(--green);}
+    .btnr{background:var(--red);color:#fff;border-color:var(--red);font-size:12px;padding:5px 10px;}
+    .sbtn{width:100%;padding:14px;font-size:16px;font-weight:500;border-radius:var(--rmd);border:none;background:var(--blue);color:#fff;cursor:pointer;font-family:inherit;margin-top:6px;}
+    .sbtn:disabled{background:var(--bg1);color:var(--t2);cursor:not-allowed;}
+    .addrow{display:flex;gap:8px;margin-bottom:10px;}
+    .inp{flex:1;padding:10px 12px;border:0.5px solid var(--bl);border-radius:var(--rmd);font-size:15px;background:var(--bg0);color:var(--t1);font-family:inherit;outline:none;}
+    .rbox{background:var(--bg0);border:0.5px solid var(--bl);border-radius:var(--rlg);padding:14px;margin-top:10px;display:none;}
+    .rbox.show{display:block;}
+    .rtx{font-size:13px;color:var(--t2);line-height:1.85;white-space:pre-wrap;background:var(--bg1);border-radius:var(--rmd);padding:12px;font-family:monospace;direction:rtl;margin:6px 0 10px;}
+    .hi{font-size:13px;padding:11px 13px;border:0.5px solid var(--bl);border-radius:var(--rmd);margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;background:var(--bg0);}
+    .hid{color:var(--t2);}
+    .bdg{font-size:11px;padding:3px 10px;border-radius:99px;font-weight:500;}
+    .bok{background:#e0f5ee;color:#0e6e52;}
+    .berr{background:#fceaea;color:#a32d2d;}
+    .empty{text-align:center;color:var(--t2);font-size:14px;padding:22px 0;}
+    .rstbtn{color:var(--red);border-color:var(--red);font-size:13px;margin-top:8px;}
+  </style>
 </head>
-
 <body>
+<div class="wrap">
+  <div class="hdr">
+    <h1>چالش ۴۰ روزه</h1>
+    <small id="dstr"></small>
+  </div>
 
-<img src="forkit.gif" id="octocat" alt="" />
+  <div class="card">
+    <div class="mrow">
+      <div class="met"><div class="mlb">روزهای باقی</div><div class="mvl bb" id="mr">40</div></div>
+      <div class="met"><div class="mlb">روز گذشته</div><div class="mvl gb" id="md">0</div></div>
+      <div class="met"><div class="mlb">اشتباهات</div><div class="mvl rb" id="me">0</div></div>
+    </div>
+    <div class="pbar"><div class="pfil" id="pf" style="width:0%"></div></div>
+    <div class="plbl" id="pl">0% پیشرفت</div>
+  </div>
 
-<!-- Feel free to change this text here -->
-<p>
-  Fork me? Fork you, @octocat!
-</p>
+  <div class="tabs">
+    <button class="tab on" onclick="go('today')">امروز</button>
+    <button class="tab" onclick="go('history')">تاریخچه</button>
+    <button class="tab" onclick="go('settings')">وظایف</button>
+  </div>
 
+  <div id="tt">
+    <div class="stl">وظایف امروز</div>
+    <div id="tl"></div>
+    <button class="sbtn" id="sb" onclick="submitReport()">ثبت گزارش روز</button>
+    <div class="rbox" id="rb">
+      <div style="font-size:12px;color:var(--t2);">گزارش امروز — کپی کن و بفرست</div>
+      <div class="rtx" id="rtx"></div>
+      <button class="btn" id="cpbtn" onclick="copyRep()">کپی گزارش</button>
+    </div>
+  </div>
+
+  <div id="th" style="display:none;">
+    <div class="stl">تاریخچه روزها</div>
+    <div id="hl"></div>
+  </div>
+
+  <div id="ts" style="display:none;">
+    <div class="stl">مدیریت وظایف</div>
+    <div id="sl"></div>
+    <div class="addrow">
+      <input class="inp" id="ni" type="text" placeholder="وظیفه جدید..." onkeydown="if(event.key==='Enter')addTask()"/>
+      <button class="btn btng" onclick="addTask()">افزودن</button>
+    </div>
+    <button class="btn rstbtn" onclick="resetAll()">ریست کامل چالش</button>
+  </div>
+</div>
+
+<script>
+var S = {
+  mistakes: 0,
+  history: [],
+  tasks: ['ورزش روزانه', 'مطالعه ۳۰ دقیقه', 'عدم استفاده از موبایل بعد از ۱۰ شب'],
+  chk: {},
+  submitted: false,
+  rep: null
+};
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function go(tab) {
+  document.getElementById('tt').style.display = tab === 'today' ? 'block' : 'none';
+  document.getElementById('th').style.display = tab === 'history' ? 'block' : 'none';
+  document.getElementById('ts').style.display = tab === 'settings' ? 'block' : 'none';
+  var tabs = document.querySelectorAll('.tab');
+  var names = ['today', 'history', 'settings'];
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].className = 'tab' + (names[i] === tab ? ' on' : '');
+  }
+  if (tab === 'history') renderHist();
+  if (tab === 'settings') renderSet();
+}
+
+function renderAll() {
+  var now = new Date();
+  var ds = now.toLocaleDateString('fa-IR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('dstr').textContent = ds;
+
+  var tot = 40 + S.mistakes;
+  var done = S.history.length;
+  var rem = Math.max(0, tot - done);
+  var pct = tot > 0 ? Math.round(done / tot * 100) : 0;
+
+  document.getElementById('mr').textContent = rem;
+  document.getElementById('md').textContent = done;
+  document.getElementById('me').textContent = S.mistakes;
+  document.getElementById('pf').style.width = pct + '%';
+  document.getElementById('pl').textContent = pct + '% پیشرفت';
+
+  renderTasks();
+}
+
+function renderTasks() {
+  var el = document.getElementById('tl');
+  if (!S.tasks.length) {
+    el.innerHTML = '<div class="empty">از بخش «وظایف» وظیفه اضافه کنید.</div>';
+  } else {
+    var html = '';
+    for (var i = 0; i < S.tasks.length; i++) {
+      var c = !!S.chk[i];
+      var lk = S.submitted;
+      html += '<div class="ti' + (c ? ' done' : '') + (lk ? ' lk' : '') + '"' +
+        (lk ? '' : ' onclick="tap(' + i + ')"') + '>' +
+        '<div class="chk' + (c ? ' on' : '') + '"></div>' +
+        '<div class="tn">' + S.tasks[i] + '</div></div>';
+    }
+    el.innerHTML = html;
+  }
+
+  var sb = document.getElementById('sb');
+  sb.disabled = S.submitted;
+  sb.textContent = S.submitted ? 'گزارش امروز ثبت شد ✓' : 'ثبت گزارش روز';
+
+  var rb = document.getElementById('rb');
+  if (S.submitted && S.rep) {
+    rb.className = 'rbox show';
+    document.getElementById('rtx').textContent = S.rep;
+  } else {
+    rb.className = 'rbox';
+  }
+}
+
+function renderHist() {
+  var el = document.getElementById('hl');
+  if (!S.history.length) {
+    el.innerHTML = '<div class="empty">هنوز هیچ روزی ثبت نشده.</div>';
+    return;
+  }
+
+  var html = '';
+  for (var i = S.history.length - 1; i >= 0; i--) {
+    var h = S.history[i];
+    html += '<div class="hi"><span class="hid">' + h.date + ' — روز ' + h.dayNum + '</span>' +
+      '<span class="bdg ' + (h.failed ? 'berr' : 'bok') + '">' +
+      (h.failed ? h.failed + ' اشتباه' : 'موفق') + '</span></div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderSet() {
+  var el = document.getElementById('sl');
+  if (!S.tasks.length) {
+    el.innerHTML = '<div class="empty">هیچ وظیفه‌ای وجود ندارد.</div>';
+    return;
+  }
+
+  var html = '';
+  for (var i = 0; i < S.tasks.length; i++) {
+    html += '<div class="ti lk"><div class="tn">' + S.tasks[i] + '</div>' +
+      '<button class="btn btnr" onclick="delTask(' + i + ')">حذف</button></div>';
+  }
+  el.innerHTML = html;
+}
+
+function tap(i) {
+  if (S.submitted) return;
+  S.chk[i] = !S.chk[i];
+  renderTasks();
+}
+
+function addTask() {
+  var inp = document.getElementById('ni');
+  var v = inp.value.trim();
+  if (!v) return;
+  S.tasks.push(v);
+  inp.value = '';
+  renderSet();
+}
+
+function delTask(i) {
+  S.tasks.splice(i, 1);
+  renderSet();
+  renderTasks();
+}
+
+function submitReport() {
+  if (S.submitted) return;
+
+  var tot = S.tasks.length;
+  var done = 0;
+  for (var k in S.chk) {
+    if (S.chk[k]) done++;
+  }
+
+  var failed = tot - done;
+  S.mistakes += failed;
+
+  var dayNum = S.history.length + 1;
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('fa-IR');
+
+  var lines = '';
+  for (var i = 0; i < S.tasks.length; i++) {
+    lines += (S.chk[i] ? '✓' : '✗') + ' ' + S.tasks[i] + '\n';
+  }
+  lines = lines.trim();
+
+  var nt = 40 + S.mistakes;
+  S.rep = '📋 گزارش روز ' + dayNum + '\n' +
+    '📅 تاریخ: ' + dateStr + '\n' +
+    '━━━━━━━━━━━━━━━━\n' +
+    lines + '\n' +
+    '━━━━━━━━━━━━━━━━\n' +
+    '✅ انجام شده: ' + done + '/' + tot + '\n' +
+    '❌ اشتباه امروز: ' + failed + '\n' +
+    '🎯 مجموع اشتباهات: ' + S.mistakes + '\n' +
+    '📆 هدف جدید: ' + nt + ' روز\n' +
+    (failed === 0 ? '🏆 روز موفق!' : '⚠️ ' + failed + ' روز به چالش اضافه شد');
+
+  S.history.push({ date: dateStr, dk: todayStr(), dayNum: dayNum, failed: failed, done: done, total: tot });
+  S.submitted = true;
+  renderAll();
+}
+
+function copyRep() {
+  if (!S.rep) return;
+  var btn = document.getElementById('cpbtn');
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(S.rep)
+      .then(function() {
+        btn.textContent = 'کپی شد ✓';
+        setTimeout(function() { btn.textContent = 'کپی گزارش'; }, 1600);
+      })
+      .catch(function() { fallbackCopy(btn); });
+  } else {
+    fallbackCopy(btn);
+  }
+}
+
+function fallbackCopy(btn) {
+  var ta = document.createElement('textarea');
+  ta.value = S.rep;
+  ta.style.cssText = 'position:fixed;left:0;top:0;opacity:0;';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+  btn.textContent = 'کپی شد ✓';
+  setTimeout(function() { btn.textContent = 'کپی گزارش'; }, 1600);
+}
+
+function resetAll() {
+  if (!confirm('آیا مطمئن هستید؟ تمام داده‌های این جلسه پاک می‌شود.')) return;
+  var tasks = S.tasks.slice();
+  S = { mistakes:0, history:[], tasks:tasks, chk:{}, submitted:false, rep:null };
+  renderAll();
+  go('today');
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./service-worker.js').catch(function() {});
+  });
+}
+
+renderAll();
+</script>
 </body>
 </html>
